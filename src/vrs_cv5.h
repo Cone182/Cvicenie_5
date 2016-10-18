@@ -9,5 +9,7 @@
 #define VRS_CV5_H_
 
 
+void startupNVIC();
+
 
 #endif /* VRS_CV5_H_ */

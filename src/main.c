@@ -68,21 +68,14 @@ int main(void)
   */
 
   /* TODO - Add your application code here */
-  //startupNVIC();
-
-
-
-
-
-
-
-
-
+  startupNVIC();
+  uint16_t cislo;
 
   /* Infinite loop */
   while (1)
   {
-	i++;
+	  USART_SendData(USART1, 5);
+	  cislo = USART_ReceiveData(USART1);
   }
   return 0;
 }

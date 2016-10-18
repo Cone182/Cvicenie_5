@@ -60,20 +60,6 @@ void startupNVIC(){
 	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
 
 	USART_Cmd(USART1, ENABLE);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 

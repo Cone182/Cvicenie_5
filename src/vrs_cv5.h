@@ -10,6 +10,10 @@
 
 
 void startupNVIC();
-
+void adc_init(void);
+void startupUSART();
+void startupADC_conf();
+void ADC1_IRQHandler(void);
+void blikaj();
 
 #endif /* VRS_CV5_H_ */

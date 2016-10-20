@@ -27,13 +27,6 @@ void startupNVIC(){
 	NVIC_Init(&NVIC_InitStructure2);*/
 }
 
-void startupADC_conf(){
-	//ADC_ITConfig(ADC1,ADC_IT_EOC,ENABLE);
-	//ADC_ITConfig(ADC1,ADC_IT_OVR,ENABLE);
-
-	//ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC);
-	//ADC_GetFlagStatus(ADC1, ADC_FLAG_OVR);
-}
 
 
 void startupUSART(){
@@ -117,49 +110,61 @@ void adc_init(void)
 
 void ADC1_IRQHandler(void){
 	blikaj();
-	//USART_SendData(USART1, 7);
 	ADC_ClearITPendingBit(ADC1, ADC_IT_EOC);
 }
 
 void blikaj(){
 	ADC_SoftwareStartConv(ADC1);
-		  while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)){}
-		  uint16_t AD_value;
+	  while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)){}
+	  uint16_t AD_value;
 
-		  AD_value=ADC_GetConversionValue(ADC1);
+	  AD_value=ADC_GetConversionValue(ADC1);
 
-		  if ((AD_value>1995) && (AD_value<2035)){
-			  GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
-			  for (int c=1; c<= 200; c++){
-				  for (int d=1; d<= 200; d++)
-				  {}
-			  }
+	  if ((AD_value>1995) && (AD_value<2035)){
+		  GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
+		  for (int c=1; c<= 200; c++){
+			  for (int d=1; d<= 200; d++)
+			  {}
 		  }
-		  else if ((AD_value>2885) && (AD_value<2925)){
-			  GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
-			  for (int c=1; c<= 400; c++){
-				  for (int d=1; d<= 400; d++)
-				  {}
-			  }
-		  }
-		  else if ((AD_value>3440) && (AD_value<3480)){
-			  GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
-			  for (int c=1; c<= 600; c++){
-				  for (int d=1; d<= 600; d++)
-				  {}
-			  }
-		  }
-		  else if ((AD_value>3640) && (AD_value<3680)){
-			  GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
-			  for (int c=1; c<= 800; c++){
-				  for (int d=1; d<= 800; d++)
-				  {}
-			  }
-		  }
-		  else if ((AD_value>3925) && (AD_value<3965)){
-		  		  GPIO_ResetBits(GPIOA, GPIO_Pin_5);
-		  	  }
 	  }
+	  else if ((AD_value>2885) && (AD_value<2925)){
+		  GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
+		  for (int c=1; c<= 400; c++){
+			  for (int d=1; d<= 400; d++)
+			  {}
+		  }
+	  }
+	  else if ((AD_value>3440) && (AD_value<3480)){
+		  GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
+		  for (int c=1; c<= 600; c++){
+			  for (int d=1; d<= 600; d++)
+			  {}
+		  }
+	  }
+	  else if ((AD_value>3640) && (AD_value<3680)){
+		  GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
+		  for (int c=1; c<= 800; c++){
+			  for (int d=1; d<= 800; d++)
+			  {}
+		  }
+	  }
+	  else if ((AD_value>3925) && (AD_value<3965)){
+			  GPIO_ResetBits(GPIOA, GPIO_Pin_5);
+		  }
+  }
 
+void uloha_1(){
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
 
+	GPIO_InitTypeDef gpioInitStruc;
+	gpioInitStruc.GPIO_Mode = GPIO_Mode_OUT;
+	gpioInitStruc.GPIO_OType = GPIO_OType_PP;
+	gpioInitStruc.GPIO_PuPd = GPIO_PuPd_UP;
+	gpioInitStruc.GPIO_Pin = GPIO_Pin_5;
+	gpioInitStruc.GPIO_Speed = GPIO_Speed_40MHz;
+
+	GPIO_Init(GPIOA, &gpioInitStruc);
+
+	ADC_SoftwareStartConv(ADC1);
+}
 

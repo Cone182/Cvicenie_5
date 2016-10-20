@@ -110,7 +110,6 @@ void adc_init(void)
 
 void ADC1_IRQHandler(void){
 	blikaj();
-	USART_SendData(USART2, 'c');
 	ADC_ClearITPendingBit(ADC1, ADC_IT_EOC);
 }
 

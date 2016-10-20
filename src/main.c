@@ -68,12 +68,12 @@ int main(void)
   */
 
   /* TODO - Add your application code here */
-  startupUSART();
-  startupNVIC();
   adc_init();
+  startupNVIC();
   uloha_1();
+  startupUSART();
 
-
+  //USART_SendData(USART2, 'c');
 
 
 

@@ -10,7 +10,7 @@
 
 
 void startupNVIC(){
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);
 
 	NVIC_InitTypeDef NVIC_InitStructure;
 	NVIC_InitStructure.NVIC_IRQChannel = ADC1_IRQn; // nam prerušení nájdete v súbore stm32l1xx.h
@@ -18,23 +18,14 @@ void startupNVIC(){
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
-
-	/*NVIC_InitTypeDef NVIC_InitStructure2;
-	NVIC_InitStructure2.NVIC_IRQChannel = USART1_IRQn; // nam prerušení nájdete v súbore stm32l1xx.h
-	NVIC_InitStructure2.NVIC_IRQChannelPreemptionPriority = 1;
-	NVIC_InitStructure2.NVIC_IRQChannelSubPriority = 0;
-	NVIC_InitStructure2.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init(&NVIC_InitStructure2);*/
 }
-
-
 
 void startupUSART(){
 	GPIO_InitTypeDef gpioInitStruc; //RX
 	GPIO_InitTypeDef gpioInitStruc2; //TX
 	USART_InitTypeDef usartInitStruc;
 
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
 
 	gpioInitStruc.GPIO_Mode = GPIO_Mode_AF;
@@ -51,8 +42,8 @@ void startupUSART(){
 	gpioInitStruc2.GPIO_Speed = GPIO_Speed_40MHz;
 	GPIO_Init(GPIOA, &gpioInitStruc2);
 
-	GPIO_PinAFConfig(GPIOA, GPIO_PinSource9, GPIO_AF_USART1);
-	GPIO_PinAFConfig(GPIOA, GPIO_PinSource10, GPIO_AF_USART1);
+	GPIO_PinAFConfig(GPIOA, GPIO_PinSource9, GPIO_AF_USART2);
+	GPIO_PinAFConfig(GPIOA, GPIO_PinSource10, GPIO_AF_USART2);
 
 	usartInitStruc.USART_BaudRate = 2*9600;
 	usartInitStruc.USART_WordLength = USART_WordLength_8b;
@@ -60,11 +51,20 @@ void startupUSART(){
 	usartInitStruc.USART_Parity = USART_Parity_No;
 	usartInitStruc.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
 	usartInitStruc.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
-	USART_Init(USART1, &usartInitStruc);
+	USART_Init(USART2, &usartInitStruc);
 
-	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 
-	USART_Cmd(USART1, ENABLE);
+	NVIC_InitTypeDef NVIC_InitStructure2;
+	NVIC_InitStructure2.NVIC_IRQChannel = USART2_IRQn; // nam prerušení nájdete v súbore stm32l1xx.h
+	NVIC_InitStructure2.NVIC_IRQChannelPreemptionPriority = 1;
+	NVIC_InitStructure2.NVIC_IRQChannelSubPriority = 0;
+	NVIC_InitStructure2.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure2);
+
+	USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
+
+	USART_Cmd(USART2, ENABLE);
 }
 
 void adc_init(void)
@@ -110,48 +110,49 @@ void adc_init(void)
 
 void ADC1_IRQHandler(void){
 	blikaj();
+	USART_SendData(USART2, 'c');
 	ADC_ClearITPendingBit(ADC1, ADC_IT_EOC);
 }
 
 void blikaj(){
 	ADC_SoftwareStartConv(ADC1);
-	  while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)){}
-	  uint16_t AD_value;
+	while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)){}
+	uint16_t AD_value;
 
-	  AD_value=ADC_GetConversionValue(ADC1);
+	AD_value=ADC_GetConversionValue(ADC1);
 
-	  if ((AD_value>1995) && (AD_value<2035)){
-		  GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
-		  for (int c=1; c<= 200; c++){
-			  for (int d=1; d<= 200; d++)
-			  {}
-		  }
-	  }
-	  else if ((AD_value>2885) && (AD_value<2925)){
-		  GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
-		  for (int c=1; c<= 400; c++){
-			  for (int d=1; d<= 400; d++)
-			  {}
-		  }
-	  }
-	  else if ((AD_value>3440) && (AD_value<3480)){
-		  GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
-		  for (int c=1; c<= 600; c++){
-			  for (int d=1; d<= 600; d++)
-			  {}
-		  }
-	  }
-	  else if ((AD_value>3640) && (AD_value<3680)){
-		  GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
-		  for (int c=1; c<= 800; c++){
-			  for (int d=1; d<= 800; d++)
-			  {}
-		  }
-	  }
-	  else if ((AD_value>3925) && (AD_value<3965)){
-			  GPIO_ResetBits(GPIOA, GPIO_Pin_5);
-		  }
-  }
+	if ((AD_value>1995) && (AD_value<2035)){
+		GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
+		for (int c=1; c<= 200; c++){
+			for (int d=1; d<= 200; d++)
+			{}
+		}
+	}
+	else if ((AD_value>2885) && (AD_value<2925)){
+		GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
+		for (int c=1; c<= 400; c++){
+			for (int d=1; d<= 400; d++)
+			{}
+		}
+	}
+	else if ((AD_value>3440) && (AD_value<3480)){
+		GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
+		for (int c=1; c<= 600; c++){
+			for (int d=1; d<= 600; d++)
+			{}
+		}
+	}
+	else if ((AD_value>3640) && (AD_value<3680)){
+		GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
+		for (int c=1; c<= 800; c++){
+			for (int d=1; d<= 800; d++)
+			{}
+		}
+	}
+	else if ((AD_value>3925) && (AD_value<3965)){
+		GPIO_ResetBits(GPIOA, GPIO_Pin_5);
+	}
+}
 
 void uloha_1(){
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);

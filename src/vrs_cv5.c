@@ -31,19 +31,19 @@ void startupUSART(){
 	gpioInitStruc.GPIO_Mode = GPIO_Mode_AF;
 	gpioInitStruc.GPIO_OType = GPIO_OType_PP;
 	gpioInitStruc.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	gpioInitStruc.GPIO_Pin = GPIO_Pin_10;
+	gpioInitStruc.GPIO_Pin = GPIO_Pin_2;
 	gpioInitStruc.GPIO_Speed = GPIO_Speed_40MHz;
 	GPIO_Init(GPIOA, &gpioInitStruc);
 
 	gpioInitStruc2.GPIO_Mode = GPIO_Mode_AF;
 	gpioInitStruc2.GPIO_OType = GPIO_OType_PP;
 	gpioInitStruc2.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	gpioInitStruc2.GPIO_Pin = GPIO_Pin_9;
+	gpioInitStruc2.GPIO_Pin = GPIO_Pin_3;
 	gpioInitStruc2.GPIO_Speed = GPIO_Speed_40MHz;
 	GPIO_Init(GPIOA, &gpioInitStruc2);
 
-	GPIO_PinAFConfig(GPIOA, GPIO_PinSource9, GPIO_AF_USART2);
-	GPIO_PinAFConfig(GPIOA, GPIO_PinSource10, GPIO_AF_USART2);
+	GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_USART2);
+	GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_USART2);
 
 	usartInitStruc.USART_BaudRate = 2*9600;
 	usartInitStruc.USART_WordLength = USART_WordLength_8b;

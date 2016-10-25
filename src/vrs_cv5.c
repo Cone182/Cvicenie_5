@@ -20,6 +20,7 @@ void startupNVIC(){
 	NVIC_Init(&NVIC_InitStructure);
 }
 
+//uloha 2
 void startupUSART(){
 	GPIO_InitTypeDef gpioInitStruc; //RX
 	GPIO_InitTypeDef gpioInitStruc2; //TX
@@ -106,11 +107,13 @@ void adc_init(void)
   ADC_SoftwareStartConv(ADC1);
 }
 
+// uloha 1
 /*void ADC1_IRQHandler(void){
 	blikaj();
 	ADC_ClearITPendingBit(ADC1, ADC_IT_EOC);
 }*/
 
+// uloha 1
 void blikaj(){
 	ADC_SoftwareStartConv(ADC1);
 	while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)){}
@@ -151,6 +154,7 @@ void blikaj(){
 	}
 }
 
+// uloha 1
 void uloha_1(){
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
 

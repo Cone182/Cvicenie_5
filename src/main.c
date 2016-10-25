@@ -34,6 +34,7 @@ SOFTWARE.
 volatile int uartBit = 0;
 volatile int hodnotaADC = 0;
 
+//uloha 1
 void USART2_IRQHandler(void) {
 	uint8_t temp = 0;
 	if (USART_GetITStatus(USART2, USART_IT_RXNE) != RESET) {
@@ -48,6 +49,7 @@ void USART2_IRQHandler(void) {
 	}
 }
 
+//uloha 2
 void ADC1_IRQHandler(void) {
 	if (ADC1->SR & ADC_SR_EOC) {
 		hodnotaADC = ADC1->DR;
@@ -104,7 +106,7 @@ int main(void)
   char text2[7];
   int c1, c2, c3, c4, d1, d2, d3;
   double AD_hodnota;
-  /* Infinite loop */
+
   while (1)
   {
 

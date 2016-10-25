@@ -32,6 +32,7 @@ SOFTWARE.
 #include "vrs_cv5.h"
 
 volatile int uartBit = 0;
+volatile int hodnotaADC = 0;
 
 void USART2_IRQHandler(void) {
 	uint8_t temp = 0;
@@ -44,6 +45,12 @@ void USART2_IRQHandler(void) {
 			else
 				uartBit = 1;
 		}
+	}
+}
+
+void ADC1_IRQHandler(void) {
+	if (ADC1->SR & ADC_SR_EOC) {
+		hodnotaADC = ADC1->DR;
 	}
 }
 
@@ -84,24 +91,55 @@ int main(void)
   */
 
   /* TODO - Add your application code here */
-  //adc_init();
+  adc_init();
   startupNVIC();
-  //ADC_ITConfig(ADC1, ADC_IT_EOC, ENABLE);
+  ADC_ITConfig(ADC1, ADC_IT_EOC, ENABLE);
 
   // uloha 1
   //uloha_1();
 
   // uloha 2
   startupUSART();
-
+  char text[6];
+  char text2[7];
+  int c1, c2, c3, c4, d1, d2, d3;
+  double AD_hodnota;
   /* Infinite loop */
   while (1)
   {
+
 	// uloha 2
 	if (uartBit == 1)
-		sendRetaz("3.30V\n\r", 10);
+	{
+		//prevod cisla na char
+		AD_hodnota = hodnotaADC * 3.3 / 4096.0;
+		d1=AD_hodnota;
+		d2=(AD_hodnota*10)-(d1*10);
+		d3=(AD_hodnota*100)-(d1*100)-(d2*10);
+		text2[0] = d1 + '0';
+		text2[1] = '.';
+		text2[2] = d2 + '0';
+		text2[3] = d3 + '0';
+		text2[4] = 'V';
+		text2[5] = '\n';
+		text2[6] = '\r';
+		sendRetaz(text2, 7);
+	}
 	else
-		sendRetaz("VRSFORLIFE\n\r", 10);
+	{
+		//prevod cisla na char
+		  c1=hodnotaADC/1000;
+		  c2=(hodnotaADC-(1000*c1))/100;
+		  c3=(hodnotaADC-(1000*c1 + c2*100))/10;
+		  c4=(hodnotaADC-(1000*c1 + c2*100 + c3*10));
+		  text[0] = c1 + '0';
+		  text[1] = c2 + '0';
+		  text[2] = c3 + '0';
+		  text[3] = c4 + '0';
+		  text[4] = '\n';
+		  text[5] = '\r';
+		sendRetaz(text, 6);
+	}
 
   }
   return 0;

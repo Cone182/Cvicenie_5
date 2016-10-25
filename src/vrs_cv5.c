@@ -28,6 +28,9 @@ void startupUSART(){
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
 
+	GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_USART2);
+	GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_USART2);
+
 	gpioInitStruc.GPIO_Mode = GPIO_Mode_AF;
 	gpioInitStruc.GPIO_OType = GPIO_OType_PP;
 	gpioInitStruc.GPIO_PuPd = GPIO_PuPd_NOPULL;
@@ -42,9 +45,6 @@ void startupUSART(){
 	gpioInitStruc2.GPIO_Speed = GPIO_Speed_40MHz;
 	GPIO_Init(GPIOA, &gpioInitStruc2);
 
-	GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_USART2);
-	GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_USART2);
-
 	usartInitStruc.USART_BaudRate = 2*9600;
 	usartInitStruc.USART_WordLength = USART_WordLength_8b;
 	usartInitStruc.USART_StopBits = USART_StopBits_1;
@@ -53,7 +53,7 @@ void startupUSART(){
 	usartInitStruc.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 	USART_Init(USART2, &usartInitStruc);
 
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
 
 	NVIC_InitTypeDef NVIC_InitStructure2;
 	NVIC_InitStructure2.NVIC_IRQChannel = USART2_IRQn; // nam prerušení nájdete v súbore stm32l1xx.h
@@ -98,8 +98,6 @@ void adc_init(void)
   /* Enable the ADC */
   ADC_Cmd(ADC1, ENABLE);
 
-  ADC_ITConfig(ADC1,ADC_IT_EOC,ENABLE);
-  ADC_ITConfig(ADC1,ADC_IT_OVR,ENABLE);
   /* Wait until the ADC1 is ready */
   while(ADC_GetFlagStatus(ADC1, ADC_FLAG_ADONS) == RESET)
   {
@@ -108,10 +106,10 @@ void adc_init(void)
   ADC_SoftwareStartConv(ADC1);
 }
 
-void ADC1_IRQHandler(void){
+/*void ADC1_IRQHandler(void){
 	blikaj();
 	ADC_ClearITPendingBit(ADC1, ADC_IT_EOC);
-}
+}*/
 
 void blikaj(){
 	ADC_SoftwareStartConv(ADC1);
@@ -168,3 +166,10 @@ void uloha_1(){
 	ADC_SoftwareStartConv(ADC1);
 }
 
+void sendRetaz(char c[],int dlzka) {
+	for(int i=0;i<dlzka;i++){
+		USART_SendData(USART2, (uint8_t) c[i]);
+		while (USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET);
+		//sendZnak(c[i]);
+	}
+}

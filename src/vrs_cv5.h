@@ -15,5 +15,6 @@ void startupUSART();
 void ADC1_IRQHandler(void);
 void blikaj();
 void uloha_1();
+void sendRetaz(char c[],int dlzka);
 
 #endif /* VRS_CV5_H_ */

@@ -31,6 +31,22 @@ SOFTWARE.
 #include "stm32l1xx.h"
 #include "vrs_cv5.h"
 
+volatile int uartBit = 0;
+
+void USART2_IRQHandler(void) {
+	uint8_t temp = 0;
+	if (USART_GetITStatus(USART2, USART_IT_RXNE) != RESET) {
+		USART_ClearITPendingBit(USART2, USART_IT_RXNE);
+		temp = USART_ReceiveData(USART2);
+		if (temp == 'm') {
+			if (uartBit == 1)
+				uartBit = 0;
+			else
+				uartBit = 1;
+		}
+	}
+}
+
 /* Private typedef */
 /* Private define  */
 /* Private macro */
@@ -68,19 +84,24 @@ int main(void)
   */
 
   /* TODO - Add your application code here */
-  adc_init();
+  //adc_init();
   startupNVIC();
-  uloha_1();
+  //ADC_ITConfig(ADC1, ADC_IT_EOC, ENABLE);
+
+  // uloha 1
+  //uloha_1();
+
+  // uloha 2
   startupUSART();
-
-  //USART_SendData(USART2, 'c');
-
-
 
   /* Infinite loop */
   while (1)
   {
-
+	// uloha 2
+	if (uartBit == 1)
+		sendRetaz("3.30V\n\r", 10);
+	else
+		sendRetaz("VRSFORLIFE\n\r", 10);
 
   }
   return 0;

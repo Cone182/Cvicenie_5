@@ -108,19 +108,7 @@ void adc_init(void)
 }
 
 // uloha 1
-/*void ADC1_IRQHandler(void){
-	blikaj();
-	ADC_ClearITPendingBit(ADC1, ADC_IT_EOC);
-}*/
-
-// uloha 1
-void blikaj(){
-	ADC_SoftwareStartConv(ADC1);
-	while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)){}
-	uint16_t AD_value;
-
-	AD_value=ADC_GetConversionValue(ADC1);
-
+void blikaj(volatile int AD_value){
 	if ((AD_value>1995) && (AD_value<2035)){
 		GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
 		for (int c=1; c<= 200; c++){
@@ -170,9 +158,51 @@ void uloha_1(){
 	ADC_SoftwareStartConv(ADC1);
 }
 
-void sendRetaz(char c[],int dlzka) {
-	for(int i=0;i<dlzka;i++){
-		USART_SendData(USART2, (uint8_t) c[i]);
-		while (USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET);
+void sendZnak(volatile int uart, volatile int hodnota) {
+    int c1, c2, c3, c4, d1, d2, d3;
+    double AD_hodnota;
+    int dlzka;
+
+	if (uart == 1){
+		char text[6];
+		//prevod cisla na char
+		AD_hodnota = hodnota * 3.3 / 4096.0;
+		d1=AD_hodnota;
+		d2=(AD_hodnota*10)-(d1*10);
+		d3=(AD_hodnota*100)-(d1*100)-(d2*10);
+		text[0] = d1 + '0';
+		text[1] = '.';
+		text[2] = d2 + '0';
+		text[3] = d3 + '0';
+		text[4] = 'V';
+		text[5] = '\n';
+		text[6] = '\r';
+		dlzka=7;
+
+		for(int i=0;i<dlzka;i++){
+			USART_SendData(USART2, (uint8_t) text[i]);
+			while (USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET);
+		}
+	}
+	else{
+		char text2[7];
+		//prevod cisla na char
+		c1=hodnota/1000;
+		c2=(hodnota-(1000*c1))/100;
+		c3=(hodnota-(1000*c1 + c2*100))/10;
+		c4=(hodnota-(1000*c1 + c2*100 + c3*10));
+		text2[0] = c1 + '0';
+		text2[1] = c2 + '0';
+		text2[2] = c3 + '0';
+		text2[3] = c4 + '0';
+		text2[4] = '\n';
+		text2[5] = '\r';
+		dlzka=6;
+
+		for(int i=0;i<dlzka;i++){
+			USART_SendData(USART2, (uint8_t) text2[i]);
+			while (USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET);
+		}
 	}
 }
+

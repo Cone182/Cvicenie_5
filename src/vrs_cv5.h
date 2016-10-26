@@ -12,9 +12,8 @@
 void startupNVIC();
 void adc_init(void);
 void startupUSART();
-void ADC1_IRQHandler(void);
 void blikaj();
 void uloha_1();
-void sendRetaz(char c[],int dlzka);
+void sendZnak(volatile int uart, volatile int hodnota);
 
 #endif /* VRS_CV5_H_ */

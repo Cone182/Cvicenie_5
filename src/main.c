@@ -34,7 +34,7 @@ SOFTWARE.
 volatile int uartBit = 0;
 volatile int hodnotaADC = 0;
 
-//uloha 1
+//uloha 2
 void USART2_IRQHandler(void) {
 	uint8_t temp = 0;
 	if (USART_GetITStatus(USART2, USART_IT_RXNE) != RESET) {
@@ -49,7 +49,7 @@ void USART2_IRQHandler(void) {
 	}
 }
 
-//uloha 2
+//uloha 1 a 2
 void ADC1_IRQHandler(void) {
 	if (ADC1->SR & ADC_SR_EOC) {
 		hodnotaADC = ADC1->DR;
@@ -73,24 +73,6 @@ void ADC1_IRQHandler(void) {
 */
 int main(void)
 {
-  int i = 0;
-
-  /**
-  *  IMPORTANT NOTE!
-  *  See the <system_*.c> file and how/if the SystemInit() function updates 
-  *  SCB->VTOR register. Sometimes the symbol VECT_TAB_SRAM needs to be defined 
-  *  when building the project if code has been located to RAM and interrupts 
-  *  are used. Otherwise the interrupt table located in flash will be used.
-  *  E.g.  SCB->VTOR = 0x20000000;  
-  */
-
-  /**
-  *  At this stage the microcontroller clock setting is already configured,
-  *  this is done through SystemInit() function which is called from startup
-  *  file (startup_stm32l1xx_hd.s) before to branch to application main.
-  *  To reconfigure the default setting of SystemInit() function, refer to
-  *  system_stm32l1xx.c file
-  */
 
   /* TODO - Add your application code here */
   adc_init();
@@ -102,47 +84,17 @@ int main(void)
 
   // uloha 2
   startupUSART();
-  char text[6];
-  char text2[7];
-  int c1, c2, c3, c4, d1, d2, d3;
-  double AD_hodnota;
 
   while (1)
   {
-
-	// uloha 2
-	if (uartBit == 1)
-	{
-		//prevod cisla na char
-		AD_hodnota = hodnotaADC * 3.3 / 4096.0;
-		d1=AD_hodnota;
-		d2=(AD_hodnota*10)-(d1*10);
-		d3=(AD_hodnota*100)-(d1*100)-(d2*10);
-		text2[0] = d1 + '0';
-		text2[1] = '.';
-		text2[2] = d2 + '0';
-		text2[3] = d3 + '0';
-		text2[4] = 'V';
-		text2[5] = '\n';
-		text2[6] = '\r';
-		sendRetaz(text2, 7);
-	}
-	else
-	{
-		//prevod cisla na char
-		  c1=hodnotaADC/1000;
-		  c2=(hodnotaADC-(1000*c1))/100;
-		  c3=(hodnotaADC-(1000*c1 + c2*100))/10;
-		  c4=(hodnotaADC-(1000*c1 + c2*100 + c3*10));
-		  text[0] = c1 + '0';
-		  text[1] = c2 + '0';
-		  text[2] = c3 + '0';
-		  text[3] = c4 + '0';
-		  text[4] = '\n';
-		  text[5] = '\r';
-		sendRetaz(text, 6);
-	}
-
+	  //blikaj(hodnotaADC);
+	  // uloha 2
+	  if (uartBit == 1){
+		  sendZnak(uartBit, hodnotaADC);
+	  }
+	  else{
+		  sendZnak(uartBit, hodnotaADC);
+	  }
   }
   return 0;
 }

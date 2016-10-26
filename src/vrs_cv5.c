@@ -152,10 +152,7 @@ void uloha_1(){
 	gpioInitStruc.GPIO_PuPd = GPIO_PuPd_UP;
 	gpioInitStruc.GPIO_Pin = GPIO_Pin_5;
 	gpioInitStruc.GPIO_Speed = GPIO_Speed_40MHz;
-
 	GPIO_Init(GPIOA, &gpioInitStruc);
-
-	ADC_SoftwareStartConv(ADC1);
 }
 
 void sendZnak(volatile int uart, volatile int hodnota) {

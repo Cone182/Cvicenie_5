@@ -29,11 +29,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  12 .debug_ranges 00000500  00000000  00000000  00025490  2**3
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_line   00001ef5  00000000  00000000  00025990  2**0
+ 13 .debug_line   00001ef4  00000000  00000000  00025990  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_str    00001ca0  00000000  00000000  00027885  2**0
+ 14 .debug_str    00001ca0  00000000  00000000  00027884  2**0
                   CONTENTS, READONLY, DEBUGGING
- 15 .comment      0000007e  00000000  00000000  00029525  2**0
+ 15 .comment      0000007e  00000000  00000000  00029524  2**0
                   CONTENTS, READONLY
  16 .debug_frame  000016dc  00000000  00000000  000295a4  2**2
                   CONTENTS, READONLY, DEBUGGING
@@ -4397,9 +4397,9 @@ void adc_init(void)
  8001be4:	40012400 	.word	0x40012400
 
 08001be8 <sendZnak>:
+	gpioInitStruc.GPIO_Pin = GPIO_Pin_5;
+	gpioInitStruc.GPIO_Speed = GPIO_Speed_40MHz;
 	GPIO_Init(GPIOA, &gpioInitStruc);
-
-	ADC_SoftwareStartConv(ADC1);
 }
 
 void sendZnak(volatile int uart, volatile int hodnota) {
@@ -4416,7 +4416,7 @@ void sendZnak(volatile int uart, volatile int hodnota) {
  8001bf2:	687b      	ldr	r3, [r7, #4]
  8001bf4:	2b01      	cmp	r3, #1
  8001bf6:	f040 80a5 	bne.w	8001d44 <sendZnak+0x15c>
-		char text[6];
+		char text[7];
 		//prevod cisla na char
 		AD_hodnota = hodnota * 3.3 / 4096.0;
  8001bfa:	683b      	ldr	r3, [r7, #0]
@@ -4588,7 +4588,7 @@ void sendZnak(volatile int uart, volatile int hodnota) {
 		}
 	}
 	else{
-		char text2[7];
+		char text2[6];
 		//prevod cisla na char
 		c1=hodnota/1000;
  8001d44:	683b      	ldr	r3, [r7, #0]

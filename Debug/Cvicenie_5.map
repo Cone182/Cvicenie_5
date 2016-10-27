@@ -1427,7 +1427,7 @@ Discarded input sections
  .data          0x00000000        0x0 src\vrs_cv5.o
  .bss           0x00000000        0x0 src\vrs_cv5.o
  .text.blikaj   0x00000000      0x144 src\vrs_cv5.o
- .text.uloha_1  0x00000000       0x44 src\vrs_cv5.o
+ .text.uloha_1  0x00000000       0x38 src\vrs_cv5.o
  .text          0x00000000        0x0 c:/program files (x86)/programs/truestudio for arm 6.0.0/armtools/bin/../lib/gcc/arm-atollic-eabi/5.3.1/../../../../arm-atollic-eabi/lib/armv7-m\libc_nano.a(lib_a-init.o)
  .data          0x00000000        0x0 c:/program files (x86)/programs/truestudio for arm 6.0.0/armtools/bin/../lib/gcc/arm-atollic-eabi/5.3.1/../../../../arm-atollic-eabi/lib/armv7-m\libc_nano.a(lib_a-init.o)
  .bss           0x00000000        0x0 c:/program files (x86)/programs/truestudio for arm 6.0.0/armtools/bin/../lib/gcc/arm-atollic-eabi/5.3.1/../../../../arm-atollic-eabi/lib/armv7-m\libc_nano.a(lib_a-init.o)
@@ -1977,7 +1977,7 @@ OUTPUT(Cvicenie_5.elf elf32-littlearm)
  .debug_ranges  0x000004a8       0x20 src\system_stm32l1xx.o
  .debug_ranges  0x000004c8       0x38 src\vrs_cv5.o
 
-.debug_line     0x00000000     0x1ef5
+.debug_line     0x00000000     0x1ef4
  .debug_line    0x00000000      0x244 Libraries\STM32L1xx_StdPeriph_Driver\src\misc.o
  .debug_line    0x00000244      0x594 Libraries\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_adc.o
  .debug_line    0x000007d8      0x35f Libraries\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_gpio.o
@@ -1987,7 +1987,7 @@ OUTPUT(Cvicenie_5.elf elf32-littlearm)
  .debug_line    0x000016ed       0x7c src\startup_stm32l1xx_hd.o
  .debug_line    0x00001769      0x1e9 src\stm32l1xx_it.o
  .debug_line    0x00001952      0x21c src\system_stm32l1xx.o
- .debug_line    0x00001b6e      0x387 src\vrs_cv5.o
+ .debug_line    0x00001b6e      0x386 src\vrs_cv5.o
 
 .debug_str      0x00000000     0x1ca0
  .debug_str     0x00000000      0x3cd Libraries\STM32L1xx_StdPeriph_Driver\src\misc.o

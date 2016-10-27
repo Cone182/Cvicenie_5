@@ -161,7 +161,7 @@ void sendZnak(volatile int uart, volatile int hodnota) {
     int dlzka;
 
 	if (uart == 1){
-		char text[6];
+		char text[7];
 		//prevod cisla na char
 		AD_hodnota = hodnota * 3.3 / 4096.0;
 		d1=AD_hodnota;
@@ -182,7 +182,7 @@ void sendZnak(volatile int uart, volatile int hodnota) {
 		}
 	}
 	else{
-		char text2[7];
+		char text2[6];
 		//prevod cisla na char
 		c1=hodnota/1000;
 		c2=(hodnota-(1000*c1))/100;

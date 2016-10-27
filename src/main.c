@@ -34,6 +34,28 @@ SOFTWARE.
 volatile int uartBit = 0;
 volatile int hodnotaADC = 0;
 
+// uloha 3
+/*void USART2_IRQHandler(void)
+{
+    static int tx_index=0;
+    static int rx_index=0;
+    if (USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)
+    {
+    	buffer[rx_index++] = USART_ReceiveData(USART2);
+        if (rx_index >= (sizeof(buffer)-1)){
+			rx_index = 0;
+		}
+    }
+    if (USART_GetITStatus(USART2, USART_IT_TXE) != RESET)
+    {
+        USART_SendData(USART2, buffer[tx_index++]);
+        if (tx_index >= (sizeof(buffer)-1)){
+        	tx_index = 0;
+        }
+    }
+}*/
+
+
 //uloha 2
 void USART2_IRQHandler(void) {
 	uint8_t temp = 0;
@@ -95,6 +117,8 @@ int main(void)
 	  else{
 		  sendZnak(uartBit, hodnotaADC);
 	  }
+	  // uloha 3
+	  //sprintf(buffer,"%i\r\n",hodnota);
   }
   return 0;
 }
